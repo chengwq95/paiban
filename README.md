@@ -11,15 +11,15 @@ The website also generates CSS for comfortable Chinese reading on the web: font 
 <!-- paiban-disable -->
 | Rule | Before | After |
 |---|---|---|
-| `space-between`: space between Chinese and Latin text or digits | 使用GitHub托管了3个项目 | 使用 GitHub 托管了 3 个项目 |
-| `fullwidth-punct`: full-width punctuation in Chinese sentences | 你好,世界! | 你好，世界！ |
-| `no-space-around-punct`: no spaces around full-width punctuation | 你好 ， 世界 。 | 你好，世界。 |
-| `fullwidth-parens`: full-width parentheses around Chinese text | 开源(免费)软件 | 开源（免费）软件 |
-| `ellipsis`: use “……” | 然后... | 然后…… |
-| `dash`: use “——” | 这个问题--其实很简单 | 这个问题——其实很简单 |
-| `quotes`: Chinese quotation marks (curly or corner) | 他说"你好" | 他说“你好” / 他说「你好」 |
-| `halfwidth-alnum`: half-width letters and digits | ｉＰｈｏｎｅ１６ | iPhone16 |
-| `repeated-punct` (off by default): no repeated punctuation | 太棒了！！！ | 太棒了！ |
+| `space-between`: space between Chinese and Latin text or digits | 用AI读了300首唐诗 | 用 AI 读了 300 首唐诗 |
+| `fullwidth-punct`: full-width punctuation in Chinese sentences | 床前明月光,疑是地上霜. | 床前明月光，疑是地上霜。 |
+| `no-space-around-punct`: no spaces around full-width punctuation | 举头望明月 ， 低头思故乡 。 | 举头望明月，低头思故乡。 |
+| `fullwidth-parens`: full-width parentheses around Chinese text | 李白(诗仙)与杜甫(诗圣) | 李白（诗仙）与杜甫（诗圣） |
+| `ellipsis`: use “……” | 白日依山尽... | 白日依山尽…… |
+| `dash`: use “——” | 春眠不觉晓--处处闻啼鸟 | 春眠不觉晓——处处闻啼鸟 |
+| `quotes`: Chinese quotation marks (curly or corner) | 他吟道"海内存知己" | 他吟道“海内存知己” / 他吟道「海内存知己」 |
+| `halfwidth-alnum`: half-width letters and digits | 唐诗３００首 | 唐诗300首 |
+| `repeated-punct` (off by default): no repeated punctuation | 好诗！！！ | 好诗！ |
 <!-- paiban-enable -->
 
 To skip part of a document, wrap it in `<!-- paiban-disable -->` and `<!-- paiban-enable -->`, or put `<!-- paiban-disable-next-line -->` above a line.
@@ -34,7 +34,7 @@ Requires Node.js 18 or newer.
 npx paiban docs/                 # check every .md, .mdx and .txt file under docs/
 npx paiban --fix README.md       # fix files in place
 npx paiban --rules               # list the rules
-echo "使用GitHub,很方便!" | npx paiban --stdin
+echo "用AI读唐诗,真方便!" | npx paiban --stdin
 ```
 
 | Option | |
@@ -57,14 +57,14 @@ echo "使用GitHub,很方便!" | npx paiban --stdin
 ```ts
 import { check, fix } from "paiban";
 
-fix("使用GitHub托管,很方便!");
-// → "使用 GitHub 托管，很方便！"
+fix("用AI读唐诗,真方便!");
+// → "用 AI 读唐诗，真方便！"
 
-fix('他说"你好"', { quotes: "corner", rules: { dash: false } });
-// → "他说「你好」"
+fix('他吟道"海内存知己"', { quotes: "corner", rules: { dash: false } });
+// → "他吟道「海内存知己」"
 
-check("使用GitHub,很好");
-// → [{ rule: "space-between", line: 1, column: 3, original: "", replacement: " ", ... }, ...]
+check("用AI读唐诗,很好");
+// → [{ rule: "space-between", line: 1, column: 2, original: "", replacement: " ", ... }, ...]
 ```
 
 `check` returns every problem with its rule, position and replacement; `fix` applies them all and returns the corrected text. Both take the same options: `rules`, `quotes` and `markdown`.

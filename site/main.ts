@@ -4,81 +4,98 @@ type Lang = "zh" | "en";
 
 const DICT = {
   zh: {
-    brand: "中文排版助手",
-    navChecker: "检查", navCss: "网页排版", navUse: "使用方式",
-    heroTitle: "让中文排版，一眼就舒服。",
-    heroLead: "自动补上中英文之间的空格，统一全角标点、引号、省略号和破折号；会跳过代码和链接。也可以生成适合中文阅读的网页 CSS。",
-    before: "修正前", after: "修正后",
-    checkerTitle: "在线检查",
-    checkerLead: "贴上文章或 Markdown，右边会标出每一处问题。文字只在你的浏览器里处理，不会上传。",
-    input: "原文", sample: "示例", clear: "清空",
-    viewMarks: "标注", viewResult: "修正结果", copy: "复制", copied: "已复制",
-    apply: "一键修正", applied: "已修正",
-    settings: "规则设置", quoteStyle: "引号样式", quoteCurly: "弯引号 “ ”（大陆）", quoteCorner: "直角引号 「 」（台湾、香港）",
-    none: "没有发现问题 ✓", empty: "在左边输入文字……",
-    problems: (n: number) => `${n} 处问题`,
+    brand: "排版",
+    navTool: "在线修正", navRules: "规则", navCss: "网页排版", navDev: "开发者",
+    eyebrow: "免安装 · 打开网页就能用",
+    heroTitle: "贴上文字，一键排好。",
+    heroLead: "自动补上中英文之间的空格，统一全角标点、引号、省略号和破折号。代码和链接原样保留。",
+    step1: "粘贴或上传文字", step2: "看清每一处修改", step3: "复制排好的结果",
+    paste: "粘贴", upload: "上传文件", sample: "示例", clear: "清空",
+    viewMarks: "标注修改", viewResult: "修正结果",
+    input: "原文", output: "结果", legendDel: "删除", legendIns: "加入",
+    dropHint: "放开即可读取文件",
+    placeholder: "在这里粘贴文章、Markdown 或任何中文文字……",
+    empty: "修正后的文字会显示在这里。",
+    chars: (n: number) => `${n.toLocaleString()} 字`,
+    download: "下载", apply: "替换原文", copyResult: "复制结果",
+    copied: "已复制到剪贴板", applied: "已替换原文", downloaded: "已下载",
+    pasteDenied: "浏览器不允许读取剪贴板，请直接在左边按 Ctrl+V 粘贴",
+    nothing: "已经排好了，没有需要修改的地方",
+    problems: (n: number) => `${n} 处修改`,
+    privacy: "所有处理都在你的浏览器里完成，文字不会上传到任何地方。",
+    rulesTitle: "九条规则，照着通行的中文排版习惯",
+    rulesLead: "默认开启八条。点卡片可以开关，修改会马上反映在上面的结果里。",
+    quoteStyle: "引号样式", quoteCurly: "弯引号 “ ”（中国大陆）", quoteCorner: "直角引号 「 」（台湾、香港）",
     cssTitle: "网页排版 CSS",
-    cssLead: "中文网页最常见的问题是字体、行高和标点。调好下面的选项，复制 CSS 就能用。",
+    cssLead: "字体、行高、标点挤压和避头尾，是中文网页最常被忽略的细节。调好后复制即可使用。",
     script: "文字", scriptSc: "简体中文", scriptTc: "繁体中文",
-    face: "字体", faceSans: "黑体（无衬线）", faceSerif: "宋体（衬线）",
+    face: "字体", faceSans: "黑体", faceSerif: "宋体",
     size: "字号", leading: "行高", tracking: "字距",
-    justify: "两端对齐", autospace: "自动留出中英文间距（text-autospace）", trim: "标点挤压（text-spacing-trim）",
-    strict: "严格避头尾：标点不出现在行首（line-break）", emphasis: "强调用着重号代替斜体", indent: "段首缩进两个字",
-    langNote: "记得在 <html> 上写好语言，例如 lang=\"zh-CN\" 或 lang=\"zh-TW\"。浏览器会依据它选择字形，写错时简体页面可能显示成繁体或日文的字形。",
-    useTitle: "在项目里使用",
-    useLead: "同一套规则也可以在命令行、代码和 CI 里运行。",
-    useCli: "命令行", useJs: "JavaScript / TypeScript", useCi: "持续集成",
-    cCheck: "# 检查", cFix: "# 直接修正", cRules: "# 查看规则",
-    langSwitch: "English",
+    justify: "两端对齐", autospace: "中英文自动间距", trim: "标点挤压",
+    strict: "严格避头尾", emphasis: "着重号代替斜体", indent: "段首缩进两字",
+    copy: "复制",
+    langNote: "记得在 <html> 写上 lang=\"zh-CN\" 或 lang=\"zh-TW\"。浏览器依据它选择字形，写错时简体字可能显示成繁体或日文字形。",
+    devTitle: "也可以放进你的工作流",
+    devLead: "同一套规则提供命令行、JavaScript 函数和 CI 检查，团队文档可以自动保持一致。",
+    devCli: "命令行", cCheck: "# 检查", cFix: "# 直接修正", cRules: "# 查看规则",
+    langSwitch: "EN",
   },
   en: {
-    brand: "paiban",
-    navChecker: "Checker", navCss: "Web CSS", navUse: "Usage",
-    heroTitle: "Chinese typography, done right.",
-    heroLead: "Adds the spaces between Chinese and Latin text, and fixes full-width punctuation, quotes, ellipses and dashes, while leaving code and links alone. It also generates CSS for comfortable Chinese reading on the web.",
-    before: "Before", after: "After",
-    checkerTitle: "Online checker",
-    checkerLead: "Paste an article or Markdown and every problem is marked on the right. Text is processed in your browser and never uploaded.",
-    input: "Text", sample: "Sample", clear: "Clear",
-    viewMarks: "Marked", viewResult: "Fixed", copy: "Copy", copied: "Copied",
-    apply: "Fix all", applied: "Fixed",
-    settings: "Rules", quoteStyle: "Quote style", quoteCurly: "Curly “ ” (mainland)", quoteCorner: "Corner 「 」 (Taiwan, Hong Kong)",
-    none: "No problems found ✓", empty: "Type or paste on the left…",
-    problems: (n: number) => `${n} problem${n === 1 ? "" : "s"}`,
+    brand: "Paiban",
+    navTool: "Fix text", navRules: "Rules", navCss: "Web CSS", navDev: "Developers",
+    eyebrow: "Nothing to install · works in your browser",
+    heroTitle: "Paste. Fix. Copy.",
+    heroLead: "Adds the spaces between Chinese and Latin text and fixes full-width punctuation, quotes, ellipses and dashes. Code and links stay untouched.",
+    step1: "Paste or upload text", step2: "Review every change", step3: "Copy the result",
+    paste: "Paste", upload: "Upload", sample: "Sample", clear: "Clear",
+    viewMarks: "Changes", viewResult: "Result",
+    input: "Original", output: "Fixed", legendDel: "removed", legendIns: "added",
+    dropHint: "Drop to open the file",
+    placeholder: "Paste an article, Markdown or any Chinese text here…",
+    empty: "The fixed text will appear here.",
+    chars: (n: number) => `${n.toLocaleString()} chars`,
+    download: "Download", apply: "Replace original", copyResult: "Copy result",
+    copied: "Copied to clipboard", applied: "Original replaced", downloaded: "Downloaded",
+    pasteDenied: "Clipboard access was blocked. Paste with Ctrl+V on the left instead.",
+    nothing: "Already perfect: nothing to change",
+    problems: (n: number) => `${n} change${n === 1 ? "" : "s"}`,
+    privacy: "Everything runs in your browser. Your text is never uploaded.",
+    rulesTitle: "Nine rules from common Chinese style guides",
+    rulesLead: "Eight are on by default. Click a card to toggle it; the result above updates immediately.",
+    quoteStyle: "Quote style", quoteCurly: "Curly “ ” (mainland China)", quoteCorner: "Corner 「 」 (Taiwan, Hong Kong)",
     cssTitle: "Web typography CSS",
-    cssLead: "Fonts, line height and punctuation are where Chinese web pages usually go wrong. Tune the options and copy the CSS.",
+    cssLead: "Fonts, line height, punctuation trimming and line breaking are the details Chinese web pages most often miss. Tune them and copy the CSS.",
     script: "Script", scriptSc: "Simplified", scriptTc: "Traditional",
-    face: "Typeface", faceSans: "Hei (sans-serif)", faceSerif: "Song (serif)",
+    face: "Typeface", faceSans: "Hei (sans)", faceSerif: "Song (serif)",
     size: "Size", leading: "Line height", tracking: "Tracking",
-    justify: "Justify", autospace: "Auto spacing between Chinese and Latin (text-autospace)", trim: "Punctuation trimming (text-spacing-trim)",
-    strict: "Strict line breaking: no punctuation at line start (line-break)", emphasis: "Emphasis dots instead of italics", indent: "Indent paragraphs by two characters",
-    langNote: "Set the page language on <html>, e.g. lang=\"zh-CN\" or lang=\"zh-TW\". Browsers pick glyphs from it; get it wrong and Simplified text can render with Traditional or Japanese glyph shapes.",
-    useTitle: "Use it in your project",
-    useLead: "The same rules run on the command line, in code and in CI.",
-    useCli: "Command line", useJs: "JavaScript / TypeScript", useCi: "Continuous integration",
-    cCheck: "# check", cFix: "# fix in place", cRules: "# list rules",
+    justify: "Justify", autospace: "Auto CJK–Latin spacing", trim: "Punctuation trimming",
+    strict: "Strict line breaking", emphasis: "Emphasis dots, not italics", indent: "Two-character indent",
+    copy: "Copy",
+    langNote: "Set lang=\"zh-CN\" or lang=\"zh-TW\" on <html>. Browsers choose glyphs from it; get it wrong and Simplified text can render with Traditional or Japanese glyph shapes.",
+    devTitle: "Bring it into your workflow",
+    devLead: "The same rules ship as a command-line tool, a JavaScript function and a CI check, so team docs stay consistent.",
+    devCli: "Command line", cCheck: "# check", cFix: "# fix in place", cRules: "# list rules",
     langSwitch: "中文",
   },
 };
 
-const SAMPLE = `# 第1章:快速开始
+const SAMPLE = `# 静夜思:一首读了1300年的乡愁
 
-本教程介绍如何在macOS上安装Node.js(v20以上)。整个过程大概需要5分钟...
+李白(字太白)写下《静夜思》时,大约26岁.全诗只有20个字,却被译成English、French等30多种语言...
 
-1. 打开终端,运行\`npm install paiban\`
-2. 访问https://nodejs.org下载安装包
-3. 价格:1,000元,首月折扣10%!
+> 床前明月光,疑是地上霜.
+> 举头望明月,低头思故乡.
 
-> 他说:"这个工具真好用"--我也这么觉得。
+很多人第一次读到它,是在小学2年级--那时还不懂什么叫"乡愁"。如今打开App就能听到朗读,问AI也能背出全诗,但那份思念从未改变!
 
-\`\`\`js
-console.log("代码块里的内容不会被修改,放心");
+\`\`\`text
+代码块不会被修改:床前明月光,疑是地上霜.
 \`\`\`
 `;
 
 const PREVIEW = {
-  sc: `<h3>排版的细节</h3><p>好的中文排版，读起来几乎感觉不到它的存在。我们在 2024 年重新设计了文档，统一了标点、引号和中英文间距，阅读速度提升了 <em>将近两成</em>。</p><p>“排版不是装饰，”她说，“而是让文字更容易被理解。”就算只是一篇 README，也值得认真对待。</p>`,
-  tc: `<h3>排版的細節</h3><p>好的中文排版，讀起來幾乎感覺不到它的存在。我們在 2024 年重新設計了文件，統一了標點、引號和中英文間距，閱讀速度提升了 <em>將近兩成</em>。</p><p>「排版不是裝飾，」她說，「而是讓文字更容易被理解。」就算只是一篇 README，也值得認真對待。</p>`,
+  sc: `<h3>静夜思</h3><p>床前明月光，疑是地上霜。举头望明月，低头思故乡。</p><p>这首诗只有 20 个字，却流传了 1300 多年。李白写下它时<em>大约 26 岁</em>，身在异乡，望著月亮想起了故乡。</p><p>“好的诗不需要解释，”老师说，“读出声来就够了。”</p>`,
+  tc: `<h3>靜夜思</h3><p>床前明月光，疑是地上霜。舉頭望明月，低頭思故鄉。</p><p>這首詩只有 20 個字，卻流傳了 1300 多年。李白寫下它時<em>大約 26 歲</em>，身在異鄉，望著月亮想起了故鄉。</p><p>「好的詩不需要解釋，」老師說，「讀出聲來就夠了。」</p>`,
 };
 
 const FONTS = {
@@ -93,14 +110,22 @@ const FONTS = {
 };
 
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;
+const store = {
+  get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } },
+  set: (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* storage unavailable */ } },
+};
 
 let lang: Lang = document.documentElement.lang === "en" ? "en" : "zh";
 const t = () => DICT[lang];
 
 // ---------- State ----------
-const ruleState: Partial<Record<RuleId, boolean>> = {};
+const ruleState: Partial<Record<RuleId, boolean>> = (() => {
+  try { return JSON.parse(store.get("paiban-rules") ?? "{}"); } catch { return {}; }
+})();
 let view: "marks" | "result" = "marks";
+let fileName = "paiban.md";
 const options = (): Options => ({ rules: ruleState, quotes: $<HTMLSelectElement>("#quotes").value as Options["quotes"] });
+const isOn = (id: RuleId) => ruleState[id] ?? RULES.find((r) => r.id === id)!.defaultOn;
 
 const escapeHtml = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 const ruleTitle = (id: RuleId) => RULES.find((r) => r.id === id)!.title[lang];
@@ -112,73 +137,129 @@ function marked(text: string, problems: Problem[]) {
     if (p.start < pos) continue;
     html += escapeHtml(text.slice(pos, p.start));
     const title = escapeHtml(ruleTitle(p.rule));
-    const ins = p.replacement === " " ? `<ins class="space" title="${title}"> </ins>` : `<ins title="${title}">${escapeHtml(p.replacement)}</ins>`;
-    html += (p.original ? `<del title="${title}">${escapeHtml(p.original.replace(/ /g, " "))}</del>` : "") + ins;
+    const del = p.original ? `<del>${escapeHtml(p.original.replace(/ /g, " "))}</del>` : "";
+    const ins = p.replacement === " " ? `<ins class="space"> </ins>` : p.replacement ? `<ins>${escapeHtml(p.replacement)}</ins>` : "";
+    html += `<span class="mark" data-tip="${title}">${del}${ins}</span>`;
     pos = p.end;
   }
   return html + escapeHtml(text.slice(pos));
 }
 
-// ---------- Checker ----------
+let toastTimer = 0;
+function toast(message: string) {
+  const el = $("#toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+// ---------- Tool ----------
 const input = $<HTMLTextAreaElement>("#input");
 
-function renderChecker() {
+function render() {
   const text = input.value;
   const problems = check(text, options());
   const out = $("#output");
-  if (!text.trim()) out.innerHTML = `<span class="muted">${t().empty}</span>`;
+  const blank = !text.trim();
+  out.classList.toggle("is-empty", blank);
+  if (blank) out.textContent = t().empty;
   else out.innerHTML = view === "marks" ? marked(text, problems) : escapeHtml(fix(text, options()));
 
+  $("#count").textContent = blank ? "" : t().chars(text.length);
   const summary = $("#summary");
-  if (!text.trim()) summary.innerHTML = "";
-  else if (!problems.length) summary.innerHTML = `<span class="ok">${t().none}</span>`;
+  if (blank) summary.innerHTML = "";
+  else if (!problems.length) summary.innerHTML = `<span class="ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>${t().nothing}</span>`;
   else {
     const counts = new Map<RuleId, number>();
     for (const p of problems) counts.set(p.rule, (counts.get(p.rule) ?? 0) + 1);
     summary.innerHTML = `<strong>${t().problems(problems.length)}</strong>` +
-      [...counts].map(([id, n]) => `<span class="chip">${escapeHtml(ruleTitle(id))} <b>${n}</b></span>`).join("");
+      [...counts].sort((a, b) => b[1] - a[1]).map(([id, n]) => `<span class="chip">${escapeHtml(ruleTitle(id))}<b>${n}</b></span>`).join("");
   }
-  $<HTMLButtonElement>("#apply").disabled = !problems.length;
-  try { localStorage.setItem("paiban-text", text); } catch { /* storage unavailable */ }
+  for (const id of ["#apply", "#copy", "#download"]) $<HTMLButtonElement>(id).disabled = blank;
+  $<HTMLButtonElement>("#apply").disabled = blank || !problems.length;
+  store.set("paiban-text", text);
 }
 
 function renderRules() {
-  $("#rules").innerHTML = RULES.map((r) => `
-    <label class="rule">
-      <input type="checkbox" data-rule="${r.id}" ${ruleState[r.id] ?? r.defaultOn ? "checked" : ""}>
-      <span><b>${escapeHtml(r.title[lang])}</b><small>${escapeHtml(r.example[0])} → ${escapeHtml(r.example[1])}</small></span>
-    </label>`).join("");
+  $("#rule-grid").innerHTML = RULES.map((r) => `
+    <button type="button" class="rule-card" data-rule="${r.id}" aria-pressed="${isOn(r.id)}">
+      <span class="rule-top"><span class="rule-name">${escapeHtml(r.title[lang])}</span><i class="toggle" aria-hidden="true"></i></span>
+      <span class="specimen"><s>${escapeHtml(r.example[0])}</s><span>${escapeHtml(r.example[1])}</span></span>
+      <code>${r.id}</code>
+    </button>`).join("");
 }
 
-function flash(button: HTMLButtonElement, label: string) {
-  const original = button.textContent;
-  button.textContent = label;
-  setTimeout(() => (button.textContent = original), 1200);
+function load(text: string, name?: string) {
+  input.value = text;
+  if (name) fileName = name;
+  render();
 }
 
-input.addEventListener("input", renderChecker);
-$("#quotes").addEventListener("change", renderChecker);
-$("#rules").addEventListener("change", (e) => {
-  const box = e.target as HTMLInputElement;
-  ruleState[box.dataset.rule as RuleId] = box.checked;
-  renderChecker();
+input.addEventListener("input", render);
+$("#quotes").addEventListener("change", () => { store.set("paiban-quotes", $<HTMLSelectElement>("#quotes").value); render(); });
+$("#rule-grid").addEventListener("click", (e) => {
+  const card = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-rule]");
+  if (!card) return;
+  const id = card.dataset.rule as RuleId;
+  ruleState[id] = !isOn(id);
+  card.setAttribute("aria-pressed", String(isOn(id)));
+  store.set("paiban-rules", JSON.stringify(ruleState));
+  render();
 });
 document.querySelectorAll<HTMLButtonElement>("[data-view]").forEach((tab) => tab.addEventListener("click", () => {
   view = tab.dataset.view as typeof view;
   document.querySelectorAll("[data-view]").forEach((x) => x.setAttribute("aria-selected", String(x === tab)));
-  renderChecker();
+  render();
 }));
-$("#sample").addEventListener("click", () => { input.value = SAMPLE; renderChecker(); });
-$("#clear").addEventListener("click", () => { input.value = ""; renderChecker(); input.focus(); });
-$<HTMLButtonElement>("#apply").addEventListener("click", (e) => {
-  input.value = fix(input.value, options());
-  renderChecker();
-  flash(e.currentTarget as HTMLButtonElement, t().applied);
+
+$("#paste").addEventListener("click", async () => {
+  try {
+    load(await navigator.clipboard.readText());
+  } catch {
+    toast(t().pasteDenied);
+    input.focus();
+  }
 });
-$<HTMLButtonElement>("#copy").addEventListener("click", async (e) => {
+$("#sample").addEventListener("click", () => load(SAMPLE, "sample.md"));
+$("#clear").addEventListener("click", () => { load(""); input.focus(); });
+
+const readFile = async (file: File) => load(await file.text(), file.name);
+$<HTMLInputElement>("#file").addEventListener("change", (e) => {
+  const file = (e.target as HTMLInputElement).files?.[0];
+  if (file) readFile(file);
+});
+const drop = $("#drop");
+drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("dragging"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("dragging"));
+drop.addEventListener("drop", (e) => {
+  e.preventDefault();
+  drop.classList.remove("dragging");
+  const file = e.dataTransfer?.files[0];
+  if (file) readFile(file);
+});
+
+const applyFix = () => {
+  if (!input.value.trim()) return;
+  load(fix(input.value, options()));
+  toast(t().applied);
+};
+$("#apply").addEventListener("click", applyFix);
+$("#copy").addEventListener("click", async () => {
   await navigator.clipboard.writeText(fix(input.value, options()));
-  flash(e.currentTarget as HTMLButtonElement, t().copied);
+  toast(t().copied);
 });
+$("#download").addEventListener("click", () => {
+  const url = URL.createObjectURL(new Blob([fix(input.value, options())], { type: "text/plain;charset=utf-8" }));
+  const a = Object.assign(document.createElement("a"), { href: url, download: fileName });
+  a.click();
+  URL.revokeObjectURL(url);
+  toast(t().downloaded);
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); applyFix(); }
+});
+if (/Mac|iPhone|iPad/.test(navigator.platform)) $("#mod").textContent = "⌘";
 
 // ---------- CSS generator ----------
 const form = $<HTMLFormElement>("#css-form");
@@ -187,7 +268,7 @@ function cssFor(scope: string) {
   const f = new FormData(form);
   const script = f.get("script") as "sc" | "tc";
   const on = (k: string) => f.has(k);
-  const lines = [
+  return [
     `${scope} {`,
     `  font-family: ${FONTS[script][f.get("face") as "sans" | "serif"]};`,
     `  font-size: ${f.get("size")}px;`,
@@ -202,8 +283,13 @@ function cssFor(scope: string) {
     `${scope} p { margin: 0 0 1em;${on("indent") ? " text-indent: 2em;" : ""} }`,
     `${scope} h1, ${scope} h2, ${scope} h3 { line-height: 1.4; letter-spacing: 0; }`,
     on("emphasis") && `${scope} em { font-style: normal; text-emphasis: filled circle; text-emphasis-position: under right; }`,
-  ];
-  return lines.filter(Boolean).join("\n");
+  ].filter(Boolean).join("\n");
+}
+
+function highlightCss(css: string) {
+  return escapeHtml(css)
+    .replace(/^([^{}\n]+)\{/gm, '<span class="sel">$1</span>{')
+    .replace(/([a-z-]+): /g, '<span class="prop">$1</span>: ');
 }
 
 let styleEl: HTMLStyleElement | null = null;
@@ -218,39 +304,35 @@ function renderCss() {
   preview.innerHTML = PREVIEW[script];
   styleEl ??= document.head.appendChild(document.createElement("style"));
   styleEl.textContent = cssFor("#preview");
-  $("#css-code").textContent = cssFor(".article");
+  $("#css-code").innerHTML = highlightCss(cssFor(".article"));
 }
 form.addEventListener("input", renderCss);
-$<HTMLButtonElement>("#copy-css").addEventListener("click", async (e) => {
+$("#copy-css").addEventListener("click", async () => {
   await navigator.clipboard.writeText(cssFor(".article"));
-  flash(e.currentTarget as HTMLButtonElement, t().copied);
+  toast(t().copied);
 });
 
 // ---------- Language ----------
 function renderLang() {
   document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
-  document.title = lang === "zh" ? "中文排版助手 paiban" : "paiban — Chinese typography checker";
+  document.title = lang === "zh" ? "排版 · 中文排版在线修正" : "Paiban · Fix Chinese typography online";
   document.querySelectorAll<HTMLElement>("[data-t]").forEach((el) => {
     const value = t()[el.dataset.t as keyof typeof DICT.zh];
     if (typeof value === "string") el.textContent = value;
   });
+  input.placeholder = t().placeholder;
   $("#lang").textContent = t().langSwitch;
   renderRules();
-  renderChecker();
+  render();
 }
 $("#lang").addEventListener("click", () => {
   lang = lang === "zh" ? "en" : "zh";
-  try { localStorage.setItem("paiban-lang", lang); } catch { /* storage unavailable */ }
+  store.set("paiban-lang", lang);
   renderLang();
 });
 
-// ---------- Hero demo ----------
-const DEMO = "我用Mac写代码,效率提高了30%!他说:\"这就是好工具\"...";
-$("#demo-before").textContent = DEMO;
-$("#demo-after").textContent = fix(DEMO);
-
-let saved: string | null = null;
-try { saved = localStorage.getItem("paiban-text"); } catch { /* storage unavailable */ }
-input.value = saved ?? SAMPLE;
+const savedQuotes = store.get("paiban-quotes");
+if (savedQuotes === "corner") $<HTMLSelectElement>("#quotes").value = "corner";
+input.value = store.get("paiban-text") ?? SAMPLE;
 renderLang();
 renderCss();
