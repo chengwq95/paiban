@@ -1,0 +1,47 @@
+{
+  "name": "paiban",
+  "version": "0.1.0",
+  "description": "Chinese typography checker and fixer: spacing, punctuation, quotes and more, for Markdown, plain text and web pages.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "chinese",
+    "typography",
+    "cjk",
+    "spacing",
+    "punctuation",
+    "markdown",
+    "lint",
+    "中文排版"
+  ],
+  "bin": {
+    "paiban": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "dev": "vite site",
+    "build:site": "vite build site --base ./"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12",
+    "vitest": "^3.2.4"
+  }
+}
