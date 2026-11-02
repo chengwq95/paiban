@@ -34,6 +34,8 @@ export const RULE_IDS = [
   "dash",
   "quotes",
   "halfwidth-alnum",
+  "fullwidth-space",
+  "proper-nouns",
   "repeated-punct",
 ] as const;
 export type RuleId = (typeof RULE_IDS)[number];
@@ -59,6 +61,21 @@ function replaceAll(id: RuleId, re: RegExp, replace: (m: RegExpMatchArray) => st
     return issues;
   };
 }
+
+const PROPER_NOUN_LIST = [
+  "GitHub", "GitLab", "JavaScript", "TypeScript", "Node.js", "Vue.js", "Next.js", "Nuxt", "npm", "pnpm",
+  "iPhone", "iPad", "iOS", "iPadOS", "macOS", "watchOS", "MacBook", "iCloud", "AirPods", "Xcode",
+  "Wi-Fi", "YouTube", "WeChat", "PayPal", "LinkedIn", "WhatsApp", "TikTok", "ChatGPT", "OpenAI",
+  "PowerPoint", "WordPress", "PostgreSQL", "MySQL", "MongoDB", "SQLite", "GraphQL", "Python", "Kotlin",
+  "HTML", "CSS", "JSON", "API", "URL", "HTTP", "HTTPS", "PDF", "USB", "CPU", "GPU", "SQL", "SEO",
+  "VS Code", "Figma", "Photoshop", "Docker", "Kubernetes",
+];
+const PROPER_NOUNS = new Map(PROPER_NOUN_LIST.map((w) => [w.toLowerCase().replace(/[\s-]/g, ""), w]));
+// Whole words only, and not part of a path, domain, file name or identifier (".github/", "json_data").
+const PROPER_NOUN_RE = new RegExp(
+  `(?<![\\w./@#$-])(?:${PROPER_NOUN_LIST.map((w) => w.replace(/[.]/g, "\\.").replace(/[\s-]/g, "[\\s-]?")).sort((a, b) => b.length - a.length).join("|")})(?![\\w/@-]|\\.\\w)`,
+  "giu",
+);
 
 const PUNCT_MAP: Record<string, string> = { ",": "，", "!": "！", "?": "？", ";": "；", ":": "：", ".": "。" };
 
@@ -86,6 +103,9 @@ export const RULES: Rule[] = [
     check: (ctx) => [
       ...replaceAll("fullwidth-punct", new RegExp(`(?<=[${HAN}${FULL_CLOSE}])[ \\t]*([,!?;:]+)[ \\t]*|(?<=[${LATIN}%])[ \\t]*([,!?;:]+)[ \\t]*(?=[${HAN}])`, "gu"),
         (m) => [...(m[1] ?? m[2])].map((c) => PUNCT_MAP[c]).join(""))(ctx),
+      // Punctuation ending a Chinese line right after Latin text or digits: "折扣 10%!" -> "折扣 10%！".
+      ...replaceAll("fullwidth-punct", new RegExp(`(?<=[${HAN}][^\\n]{0,40}?[${LATIN}%])[ \\t]*([,!?;:.])(?=[ \\t]*$)`, "gmu"),
+        (m) => PUNCT_MAP[m[1]])(ctx),
       // A full stop only at the end of a sentence, so "文件.txt" is left alone.
       ...replaceAll("fullwidth-punct", new RegExp(`(?<=[${HAN}])[ \\t]*\\.(?!\\.)(?=[ \\t]*(?:$|[${HAN}]))`, "gmu"),
         () => "。")(ctx),
@@ -146,6 +166,42 @@ export const RULES: Rule[] = [
     example: ["唐诗３００首", "唐诗300首"],
     check: replaceAll("halfwidth-alnum", /[０-９Ａ-Ｚａ-ｚ]+/g,
       (m) => m[0].replace(/./g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xfee0))),
+  },
+  {
+    id: "fullwidth-space",
+    defaultOn: true,
+    title: { zh: "句中不用全角空格", en: "No full-width spaces mid-sentence" },
+    example: ["静夜思\u3000李白", "静夜思 李白"],
+    // Leading full-width spaces (paragraph indents) are fine. Elsewhere they become a normal space,
+    // or disappear next to full-width punctuation.
+    check: replaceAll("fullwidth-space", /(?<=\S)\u3000+/gu, (m) => {
+      const before = m.input![m.index! - 1];
+      const after = m.input![m.index! + m[0].length] ?? "";
+      return FULL_CLOSE.includes(before) || FULL_OPEN.includes(before) || FULL_CLOSE.includes(after) ? "" : " ";
+    }),
+  },
+  {
+    id: "proper-nouns",
+    defaultOn: true,
+    title: { zh: "专有名词的正确大小写", en: "Correct capitalisation of product names" },
+    example: ["用iphone看github", "用iPhone看GitHub"],
+    check: ({ masked }) => {
+      const issues: Issue[] = [];
+      for (const m of masked.text.matchAll(PROPER_NOUN_RE)) {
+        const word = m[0];
+        const canonical = PROPER_NOUNS.get(word.toLowerCase().replace(/[\s-]/g, ""));
+        if (!canonical || canonical === word) continue;
+        const start = m.index!;
+        const end = start + word.length;
+        if (touches(masked.ranges, start, end)) continue;
+        // Only in Chinese text, so English documents keep their own style.
+        const lineStart = masked.text.lastIndexOf("\n", start) + 1;
+        const lineEnd = masked.text.indexOf("\n", end);
+        if (!new RegExp(`[${HAN}]`, "u").test(masked.text.slice(lineStart, lineEnd < 0 ? undefined : lineEnd))) continue;
+        issues.push({ rule: "proper-nouns", start, end, replacement: canonical });
+      }
+      return issues;
+    },
   },
   {
     id: "repeated-punct",

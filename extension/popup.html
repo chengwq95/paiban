@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <span class="seal">排</span>
+    <strong data-i="title"></strong>
+    <a id="site" href="https://chengwq95.github.io/paiban/" target="_blank" data-i="site"></a>
+  </header>
+  <p class="hint" data-i="how"></p>
+  <textarea id="text" spellcheck="false"></textarea>
+  <div class="row">
+    <span id="count" class="count"></span>
+    <button id="copy" type="button" data-i="copy"></button>
+  </div>
+  <details>
+    <summary data-i="settings"></summary>
+    <label class="field"><span data-i="quotes"></span>
+      <select id="quotes"><option value="curly">“ ”</option><option value="corner">「 」</option></select>
+    </label>
+    <div id="rules"></div>
+  </details>
+  <script src="popup.js"></script>
+</body>
+</html>

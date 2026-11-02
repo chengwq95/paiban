@@ -44,9 +44,14 @@ const DIRECTIVES = [
   /<!--\s*paiban-disable-next-line\s*-->[^\n]*\n?[^\n]*/g,
 ];
 
-export function mask(input: string, { markdown = true } = {}): Masked {
+export function mask(input: string, { markdown = true, extra = [] as Range[] } = {}): Masked {
   const out = input.split("");
   const ranges: Range[] = [];
+  // Ranges the caller already knows are code (e.g. <code> elements in a web page).
+  for (const r of extra) {
+    ranges.push({ ...r });
+    for (let i = r.start; i < r.end; i++) out[i] = input[i] === "\n" ? "\n" : LATIN_LIKE;
+  }
   for (const re of DIRECTIVES) for (const m of input.matchAll(re)) {
     const start = m.index!;
     const end = start + m[0].length;

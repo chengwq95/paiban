@@ -1,3 +1,5 @@
 node_modules
 dist
 site/dist
+extension/dist
+site/public/paiban-extension.zip

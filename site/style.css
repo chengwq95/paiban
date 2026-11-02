@@ -43,6 +43,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 body {
   margin: 0;
@@ -126,6 +127,22 @@ textarea {
 }
 textarea::placeholder { color: color-mix(in oklab, var(--muted) 70%, transparent); }
 .output.is-empty { color: var(--muted); }
+
+/* Rich text: formatting pasted from editors and web pages is kept. */
+.rich { height: 440px; margin: 0; padding: 8px 22px 22px; overflow: auto; outline: none; font-size: 15.5px; line-height: 1.85; overflow-wrap: anywhere; text-autospace: no-autospace; }
+.rich, .rich-out { white-space: normal; line-height: 1.85; }
+.rich :is(p, ul, ol, blockquote, pre, table), .rich-out :is(p, ul, ol, blockquote, pre, table) { margin: 0 0 .8em; }
+.rich :is(h1, h2, h3, h4), .rich-out :is(h1, h2, h3, h4) { margin: .4em 0 .5em; font-family: var(--serif); line-height: 1.4; }
+.rich h1, .rich-out h1 { font-size: 1.5em; } .rich h2, .rich-out h2 { font-size: 1.3em; } .rich h3, .rich-out h3 { font-size: 1.15em; }
+.rich :is(ul, ol), .rich-out :is(ul, ol) { padding-left: 1.4em; }
+.rich blockquote, .rich-out blockquote { padding-left: 1em; border-left: 3px solid var(--line); color: var(--muted); }
+.rich a, .rich-out a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.rich code, .rich-out code { padding: 1px 5px; border-radius: 5px; background: var(--soft); font: .9em var(--mono); }
+.rich img, .rich-out img { max-width: 100%; height: auto; border-radius: 8px; }
+.rich :is(td, th), .rich-out :is(td, th) { padding: 4px 8px; border: 1px solid var(--line); }
+.mode { display: inline-flex; align-items: center; gap: 8px; padding: 2px 4px 2px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 11.5px; letter-spacing: 0; }
+.mode button { padding: 1px 8px; border: 0; border-radius: 999px; background: var(--card); color: var(--fg); font-size: 11px; }
+@media (max-width: 860px) { .rich { height: 300px; } }
 .mark { position: relative; border-radius: 4px; }
 .mark del { padding: 1px 1px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); text-decoration: line-through; text-decoration-thickness: 1.5px; }
 .mark ins { padding: 1px 1px; border-radius: 4px; background: var(--good-soft); color: var(--good); text-decoration: none; font-weight: 600; }
@@ -187,10 +204,34 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-bottom-width: 2px;
 .rule-card[aria-pressed="true"] .toggle { background: var(--accent); }
 .rule-card[aria-pressed="true"] .toggle::after { translate: 14px 0; }
 .specimen { display: grid; gap: 4px; padding: 14px 16px; border-radius: 12px; background: var(--soft); font-family: var(--serif); font-size: 16px; line-height: 1.6; text-autospace: no-autospace; }
+.specimen .ws { border-radius: 3px; background: color-mix(in oklab, var(--accent) 22%, transparent); color: inherit; }
 .specimen s { color: var(--muted); text-decoration-color: color-mix(in oklab, var(--accent) 60%, transparent); }
 .specimen span { color: var(--fg); font-weight: 600; }
 .rule-card code { color: var(--muted); font: 11.5px/1 var(--mono); }
 .quotes-field { margin-top: 20px; }
+
+/* Extension */
+.ext-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; align-items: center; }
+@media (max-width: 900px) { .ext-grid { grid-template-columns: 1fr; } }
+.ext-window { border: 1px solid var(--line); border-radius: 18px; background: var(--card); box-shadow: var(--shadow); overflow: hidden; }
+.ext-bar { display: flex; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--soft); }
+.ext-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.ext-body { position: relative; min-height: 250px; padding: 28px 28px 24px; }
+.ext-text { margin: 0; font-size: 17px; text-autospace: no-autospace; }
+.ext-sel { background: color-mix(in oklab, #3b82f6 28%, transparent); border-radius: 3px; }
+.ext-menu { position: absolute; left: 120px; top: 62px; display: grid; min-width: 210px; padding: 6px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); box-shadow: var(--shadow); font-size: 13px; color: var(--muted); }
+.ext-menu > span { padding: 6px 10px; border-radius: 8px; }
+.ext-menu-item { display: flex; align-items: center; gap: 8px; background: var(--accent-soft); color: var(--fg); font-weight: 600; }
+.ext-menu-item b { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 4px; background: var(--accent); color: var(--accent-fg); font: 900 11px/1 var(--serif); }
+.ext-after { position: absolute; left: 28px; bottom: 24px; padding: 8px 12px; border-radius: 10px; background: var(--good-soft); color: var(--good); font-weight: 600; }
+.ext-after::before { content: "→ "; }
+.ext-steps ol { display: grid; gap: 18px; margin: 0 0 24px; padding: 0; list-style: none; }
+.ext-steps li { display: flex; gap: 14px; }
+.ext-steps li > b { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--fg); font: 600 12px/1 var(--mono); }
+.ext-steps strong { font-size: 15px; }
+.ext-steps p { margin: 2px 0 0; color: var(--muted); font-size: 13.5px; }
+.ext-download { display: inline-flex; align-items: center; gap: 8px; line-height: 42px; text-decoration: none; }
+.ext-note { margin: 14px 0 0; color: var(--muted); font-size: 12.5px; }
 
 /* Fields */
 .field { display: grid; gap: 8px; font-size: 13px; color: var(--muted); }

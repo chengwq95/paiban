@@ -1,0 +1,23 @@
+:root { --page: #f6f3ec; --card: #fffdf8; --fg: #1b1814; --muted: #7a736a; --line: #e5ded1; --accent: #b4232a; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root { --page: #0f0e0c; --card: #171512; --fg: #efe9de; --muted: #9c958a; --line: #2b2722; --accent: #e0574e; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { width: 340px; margin: 0; padding: 14px; background: var(--page); color: var(--fg); font: 13px/1.6 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+header { display: flex; align-items: center; gap: 8px; }
+.seal { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: var(--accent); color: #fff; font: 700 14px serif; transform: rotate(-4deg); }
+header strong { font: 700 15px serif; letter-spacing: .08em; }
+header a { margin-left: auto; color: var(--muted); font-size: 12px; text-decoration: none; }
+header a:hover { color: var(--fg); }
+.hint { margin: 10px 0; color: var(--muted); font-size: 12px; }
+kbd { padding: 0 5px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); font: 11px ui-monospace, monospace; }
+textarea { width: 100%; height: 120px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: inherit; font: inherit; resize: vertical; outline: none; }
+textarea:focus { border-color: var(--accent); }
+.row { display: flex; align-items: center; margin-top: 8px; }
+.count { color: var(--muted); font-size: 12px; }
+button { margin-left: auto; height: 32px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--accent); color: #fff; font: 600 13px inherit; cursor: pointer; }
+button:disabled { opacity: .4; cursor: default; }
+details { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+summary { cursor: pointer; color: var(--muted); }
+.field { display: flex; align-items: center; justify-content: space-between; margin: 10px 0 6px; }
+select { padding: 2px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: inherit; }
+#rules label { display: flex; gap: 8px; align-items: center; padding: 3px 0; cursor: pointer; }
+#rules input { accent-color: var(--accent); }

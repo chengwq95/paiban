@@ -11,6 +11,8 @@ export interface Options {
   quotes?: QuoteStyle;
   /** Skip fenced code blocks and front matter (default true). */
   markdown?: boolean;
+  /** Extra ranges to leave alone and treat like inline code (used by the DOM fixer). */
+  protect?: { start: number; end: number }[];
 }
 
 export interface Problem extends Issue {
@@ -27,7 +29,7 @@ function enabled(options: Options) {
 
 /** Lists every problem in the text, in order. */
 export function check(text: string, options: Options = {}): Problem[] {
-  const masked = mask(text, { markdown: options.markdown ?? true });
+  const masked = mask(text, { markdown: options.markdown ?? true, extra: options.protect });
   const ctx = { masked, quotes: options.quotes ?? "curly" };
   const issues = enabled(options).flatMap((r) => r.check(ctx));
   issues.sort((a, b) => a.start - b.start || a.end - b.end);
@@ -41,9 +43,9 @@ export function check(text: string, options: Options = {}): Problem[] {
   });
 }
 
-/** Applies non-overlapping issues; later ones that overlap an earlier one are left for the next pass. */
-function apply(text: string, issues: Issue[]) {
-  const chosen: Issue[] = [];
+/** Picks issues that don't overlap; later ones that overlap an earlier one are left for the next pass. */
+export function nonOverlapping<T extends Issue>(issues: T[]): T[] {
+  const chosen: T[] = [];
   let lastEnd = -1;
   for (const issue of issues) {
     const zeroWidth = issue.start === issue.end;
@@ -51,8 +53,12 @@ function apply(text: string, issues: Issue[]) {
     chosen.push(issue);
     lastEnd = Math.max(issue.end, issue.start);
   }
+  return chosen;
+}
+
+function apply(text: string, issues: Issue[]) {
   let out = text;
-  for (const issue of chosen.reverse()) out = out.slice(0, issue.start) + issue.replacement + out.slice(issue.end);
+  for (const issue of nonOverlapping(issues).reverse()) out = out.slice(0, issue.start) + issue.replacement + out.slice(issue.end);
   return out;
 }
 

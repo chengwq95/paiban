@@ -26,6 +26,7 @@
       <nav class="top-nav">
         <a href="#tool" data-t="navTool"></a>
         <a href="#rules" data-t="navRules"></a>
+        <a href="#extension" data-t="navExt"></a>
         <a href="#css" data-t="navCss"></a>
         <a href="#dev" data-t="navDev"></a>
       </nav>
@@ -52,7 +53,7 @@
           <div class="tool-actions">
             <button id="paste" class="ghost" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6v3H9zM7 5H5v15h14V5h-2"/></svg><span data-t="paste"></span></button>
             <label class="ghost" for="file"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4M4 16v4h16v-4"/></svg><span data-t="upload"></span></label>
-            <input id="file" type="file" accept=".md,.markdown,.mdx,.txt,text/plain,text/markdown" hidden>
+            <input id="file" type="file" accept=".md,.markdown,.mdx,.txt,.html,.htm,text/plain,text/markdown,text/html" hidden>
             <button id="sample" class="ghost" type="button" data-t="sample"></button>
             <button id="clear" class="ghost" type="button" data-t="clear"></button>
           </div>
@@ -64,8 +65,13 @@
 
         <div class="panes">
           <div class="pane" id="drop">
-            <div class="pane-label"><span data-t="input"></span><span id="count" class="count"></span></div>
+            <div class="pane-label">
+              <span data-t="input"></span>
+              <span id="mode" class="mode" hidden><span data-t="richMode"></span><button id="to-plain" type="button" data-t="toPlain"></button></span>
+              <span id="count" class="count"></span>
+            </div>
             <textarea id="input" spellcheck="false"></textarea>
+            <div id="rich" class="rich" contenteditable="true" spellcheck="false" hidden></div>
             <div class="drop-hint" data-t="dropHint"></div>
           </div>
           <div class="pane pane-out">
@@ -78,6 +84,7 @@
           <div id="summary" class="summary"></div>
           <div class="foot-actions">
             <span class="kbd-hint"><kbd id="mod">Ctrl</kbd> + <kbd>Enter</kbd></span>
+            <button id="share" class="secondary" type="button" data-t="share"></button>
             <button id="download" class="secondary" type="button" data-t="download"></button>
             <button id="apply" class="secondary" type="button" data-t="apply"></button>
             <button id="copy" class="primary" type="button"><span data-t="copyResult"></span></button>
@@ -103,9 +110,42 @@
       </label>
     </section>
 
-    <section id="css" class="wrap block">
+    <section id="extension" class="wrap block">
       <div class="block-head">
         <p class="kicker">02</p>
+        <h2 class="display" data-t="extTitle"></h2>
+        <p data-t="extLead"></p>
+      </div>
+      <div class="ext-grid">
+        <div class="ext-demo" aria-hidden="true">
+          <div class="ext-window">
+            <div class="ext-bar"><i></i><i></i><i></i></div>
+            <div class="ext-body">
+              <p class="ext-text"><span class="ext-sel" data-t="extDemoBefore"></span></p>
+              <div class="ext-menu">
+                <span data-t="extMenuCopy"></span>
+                <span data-t="extMenuPaste"></span>
+                <span class="ext-menu-item"><b>排</b><span data-t="extMenuFix"></span></span>
+              </div>
+              <p class="ext-text ext-after" data-t="extDemoAfter"></p>
+            </div>
+          </div>
+        </div>
+        <div class="ext-steps">
+          <ol>
+            <li><b>1</b><div><strong data-t="extStep1"></strong><p data-t="extStep1d"></p></div></li>
+            <li><b>2</b><div><strong data-t="extStep2"></strong><p data-t="extStep2d"></p></div></li>
+            <li><b>3</b><div><strong data-t="extStep3"></strong><p data-t="extStep3d"></p></div></li>
+          </ol>
+          <a class="primary ext-download" href="./paiban-extension.zip" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12m0 0-4-4m4 4 4-4M4 20h16"/></svg><span data-t="extDownload"></span></a>
+          <p class="ext-note" data-t="extNote"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="css" class="wrap block">
+      <div class="block-head">
+        <p class="kicker">03</p>
         <h2 class="display" data-t="cssTitle"></h2>
         <p data-t="cssLead"></p>
       </div>
@@ -145,7 +185,7 @@
 
     <section id="dev" class="wrap block">
       <div class="block-head">
-        <p class="kicker">03</p>
+        <p class="kicker">04</p>
         <h2 class="display" data-t="devTitle"></h2>
         <p data-t="devLead"></p>
       </div>

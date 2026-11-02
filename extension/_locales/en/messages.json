@@ -1,0 +1,17 @@
+{
+  "name": {
+    "message": "Paiban · Fix Chinese typography"
+  },
+  "description": {
+    "message": "Select text in any web editor and fix Chinese typography in one click: spacing, full-width punctuation, quotes, ellipses and dashes. Bold, links and other formatting are kept."
+  },
+  "commandFix": {
+    "message": "Fix the selected text (or the whole field when nothing is selected)"
+  },
+  "menuFix": {
+    "message": "Paiban: fix selected text"
+  },
+  "menuFixField": {
+    "message": "Paiban: fix this whole field"
+  }
+}

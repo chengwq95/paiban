@@ -29,6 +29,16 @@ const cases: [string, string, string][] = [
   ["halfwidth alnum", "ｉＰｈｏｎｅ１６上市", "iPhone16 上市"],
   ["after percent", "提高了30%!他说", "提高了 30%！他说"],
   ["ellipsis after quote", "他说“好”...", "他说“好”……"],
+  ["end of line after percent", "首月折扣10%!", "首月折扣 10%！"],
+  ["end of line: English line kept", "Done 100%!", "Done 100%!"],
+  ["end of line: list number kept", "1. 第一项", "1. 第一项"],
+  ["fullwidth space", "静夜思\u3000李白", "静夜思 李白"],
+  ["fullwidth space: before punct", "你好\u3000，世界", "你好，世界"],
+  ["fullwidth space: indent kept", "\u3000\u3000床前明月光", "\u3000\u3000床前明月光"],
+  ["proper nouns", "用iphone看github上的javascript项目", "用 iPhone 看 GitHub 上的 JavaScript 项目"],
+  ["proper nouns: wifi and vscode", "连上wifi后打开vscode", "连上 Wi-Fi 后打开 VS Code"],
+  ["proper nouns: paths kept", "编辑 .github/workflows 和 data.json 文件", "编辑 .github/workflows 和 data.json 文件"],
+  ["proper nouns: English line kept", "push to github", "push to github"],
   ["mixed", "我用Mac写代码,效率很高!", "我用 Mac 写代码，效率很高！"],
 ];
 
