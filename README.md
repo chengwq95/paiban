@@ -48,7 +48,7 @@ echo "使用GitHub,很方便!" | npx paiban --stdin
 `paiban` exits with code 1 when it finds problems, so it works as a CI check:
 
 ```yaml
-- uses: actions/setup-node@v4
+- uses: actions/setup-node@v7
 - run: npx paiban docs/
 ```
 
