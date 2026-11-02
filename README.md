@@ -4,7 +4,7 @@ A checker and fixer for Chinese typography. It adds the spaces between Chinese a
 
 **Use it online at <https://chengwq95.github.io/paiban/>**: paste text (formatting is kept), review every change, and copy the result. Nothing to install, and your text never leaves the browser. It also comes as a browser extension, a command-line tool, a JavaScript library and a CI check.
 
-The website also generates CSS for comfortable Chinese reading on the web: font stacks, line height, punctuation trimming and line breaking.
+The website also generates CSS for comfortable Chinese reading on the web: font stacks, line height, punctuation trimming and line breaking, plus optional heading animations (brush writing, seal stamp, ink fade-in, brush underline) from the Chinese-style series in [Motion Library](https://chengwq95.github.io/motion-library/?m=chinese).
 
 ![The online checker marking problems in a Markdown document](docs/checker.png)
 

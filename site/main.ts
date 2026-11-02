@@ -424,7 +424,29 @@ function cssFor(scope: string) {
     `${scope} p { margin: 0 0 1em;${on("indent") ? " text-indent: 2em;" : ""} }`,
     `${scope} h1, ${scope} h2, ${scope} h3 { line-height: 1.4; letter-spacing: 0; }`,
     on("emphasis") && `${scope} em { font-style: normal; text-emphasis: filled circle; text-emphasis-position: under right; }`,
+    ...headingMotion(scope, String(f.get("motion") ?? "none")),
   ].filter(Boolean).join("\n");
+}
+
+// Heading animations from the Chinese-style series in the Motion Library; each plays once.
+function headingMotion(scope: string, kind: string) {
+  const h = `${scope} h1, ${scope} h2, ${scope} h3`;
+  const quiet = `@media (prefers-reduced-motion: reduce) { ${h} { animation: none; } }`;
+  switch (kind) {
+    case "brush": return [
+      `${h} { -webkit-mask: linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 260% 100% no-repeat; mask: linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 260% 100% no-repeat; animation: pb-brush 1.6s cubic-bezier(.5, 0, .3, 1) both; }`,
+      `@keyframes pb-brush { to { -webkit-mask-position: 0 0; mask-position: 0 0; } }`, quiet];
+    case "stamp": return [
+      `${h} { display: inline-block; animation: pb-stamp .7s cubic-bezier(.2, .9, .25, 1.2) both; }`,
+      `@keyframes pb-stamp { from { opacity: 0; transform: scale(1.8) rotate(-8deg); } to { opacity: 1; transform: none; } }`, quiet];
+    case "ink": return [
+      `${h} { animation: pb-ink 1.4s ease-out both; }`,
+      `@keyframes pb-ink { from { opacity: 0; filter: blur(10px); letter-spacing: .3em; } to { opacity: 1; filter: none; } }`, quiet];
+    case "underline": return [
+      `${h} { display: inline-block; padding-bottom: .1em; background: linear-gradient(90deg, #b4232a, #b4232a) 0 100% / 0 .12em no-repeat; animation: pb-underline 1s .2s cubic-bezier(.6, 0, .2, 1) both; }`,
+      `@keyframes pb-underline { to { background-size: 100% .12em; } }`, quiet];
+    default: return [];
+  }
 }
 
 function highlightCss(css: string) {
@@ -445,9 +467,12 @@ function renderCss() {
   preview.innerHTML = PREVIEW[script];
   styleEl ??= document.head.appendChild(document.createElement("style"));
   styleEl.textContent = cssFor("#preview");
+  $("#replay").hidden = f.get("motion") === "none";
   $("#css-code").innerHTML = highlightCss(cssFor(".article"));
 }
 form.addEventListener("input", renderCss);
+// Re-insert the preview so a one-off heading animation plays again.
+$("#replay").addEventListener("click", () => { const el = $("#preview"); el.innerHTML = el.innerHTML; });
 $("#copy-css").addEventListener("click", async () => {
   await navigator.clipboard.writeText(cssFor(".article"));
   toast(t().copied);

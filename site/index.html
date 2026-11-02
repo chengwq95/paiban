@@ -203,9 +203,19 @@
             <label class="switch"><input type="checkbox" name="emphasis" checked><i></i><span data-t="emphasis"></span></label>
             <label class="switch"><input type="checkbox" name="indent"><i></i><span data-t="indent"></span></label>
           </div>
+          <label class="field"><span data-t="motion"></span>
+            <select name="motion">
+              <option value="none" data-t="motionNone"></option>
+              <option value="brush" data-t="motionBrush"></option>
+              <option value="stamp" data-t="motionStamp"></option>
+              <option value="ink" data-t="motionInk"></option>
+              <option value="underline" data-t="motionUnderline"></option>
+            </select>
+          </label>
+          <a class="more-motion" href="https://chengwq95.github.io/motion-library/?m=chinese" target="_blank" rel="noopener" data-t="moreMotion"></a>
         </form>
         <div class="css-out">
-          <div class="paper"><article id="preview"></article></div>
+          <div class="paper"><button id="replay" class="ghost small replay" type="button" hidden data-t="replay"></button><article id="preview"></article></div>
           <div class="code-card">
             <div class="code-bar"><span>CSS</span><button id="copy-css" class="ghost small" type="button" data-t="copy"></button></div>
             <pre><code id="css-code"></code></pre>
