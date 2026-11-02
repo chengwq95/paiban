@@ -17,6 +17,9 @@ describe("fixHtml", () => {
     expect(fixHtml("<pre>代码,不变</pre>")).toBe("<pre>代码,不变</pre>");
     expect(fixHtml("<p>运行<code>npm安装</code>命令</p>")).toBe("<p>运行 <code>npm安装</code> 命令</p>");
   });
+  it("honours skipped changes", () => {
+    expect(fixHtml("<p>用<b>AI</b>读,好!</p>", { skip: [{ start: 1, end: 1 }] })).toBe("<p>用<b>AI</b> 读，好！</p>");
+  });
   it("fixes punctuation split across nodes", () => {
     expect(fixHtml("<p>好诗<i>...</i></p>")).toBe("<p>好诗<i>……</i></p>");
   });

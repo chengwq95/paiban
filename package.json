@@ -35,8 +35,8 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "dev": "vite site",
-    "build:site": "node scripts/build-extension.mjs && vite build site --base ./",
+    "dev": "vite",
+    "build:site": "node scripts/build-extension.mjs && vite build",
     "build:extension": "node scripts/build-extension.mjs"
   },
   "devDependencies": {

@@ -3,8 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>排版 · 中文排版在线修正</title>
-  <meta name="description" content="免安装的中文排版工具：贴上文字，一键补好中英文空格、统一全角标点、引号、省略号和破折号，再复制回去。">
+  <title>排版 · 中文排版在线修正工具（中英文空格、全角标点一键修正）</title>
+  <meta name="description" content="免安装的中文排版工具：贴上文字，一键补好中英文之间的空格，统一全角标点、引号、省略号和破折号，提醒「的地得」等易错词。保留粗体和链接格式，文字不上传。">
+  <meta name="keywords" content="中文排版,中英文空格,全角标点,排版工具,文案排版,中文排版指北,盘古之白,的地得,公众号排版,Markdown 排版">
+  <link rel="canonical" href="https://chengwq95.github.io/paiban/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="排版">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:url" content="https://chengwq95.github.io/paiban/">
+  <meta property="og:title" content="排版 · 贴上文字，一键排好">
+  <meta property="og:description" content="免安装的中文排版工具：补好中英文空格，统一全角标点、引号、省略号和破折号。文字不上传。">
+  <meta property="og:image" content="https://chengwq95.github.io/paiban/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="排版：贴上文字，一键排好">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="排版 · 贴上文字，一键排好">
+  <meta name="twitter:description" content="免安装的中文排版工具：补好中英文空格，统一全角标点、引号、省略号和破折号。">
+  <meta name="twitter:image" content="https://chengwq95.github.io/paiban/og.png">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "排版",
+    "alternateName": "Paiban",
+    "url": "https://chengwq95.github.io/paiban/",
+    "description": "免安装的中文排版在线修正工具：中英文空格、全角标点、引号、省略号、破折号与易错词提醒。",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": ["zh-CN", "en"],
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
   <meta name="theme-color" content="#f6f3ec" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f0e0d" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='4' y='4' width='56' height='56' rx='10' fill='%23b4232a'/><text x='32' y='44' font-size='32' text-anchor='middle' fill='%23fff' font-family='serif' font-weight='700'>排</text></svg>">
@@ -75,7 +107,7 @@
             <div class="drop-hint" data-t="dropHint"></div>
           </div>
           <div class="pane pane-out">
-            <div class="pane-label"><span data-t="output"></span><span class="legend"><i class="lg-del"></i><span data-t="legendDel"></span><i class="lg-ins"></i><span data-t="legendIns"></span></span></div>
+            <div class="pane-label"><span data-t="output"></span><span class="click-help" data-t="clickHelp"></span><span class="legend"><i class="lg-del"></i><span data-t="legendDel"></span><i class="lg-ins"></i><span data-t="legendIns"></span><i class="lg-hint"></i><span data-t="legendHint"></span></span></div>
             <div id="output" class="output" tabindex="0" aria-live="polite"></div>
           </div>
         </div>

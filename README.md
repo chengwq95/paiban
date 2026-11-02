@@ -32,6 +32,8 @@ English-only text is never changed. In Markdown, fenced code blocks, inline code
 
 ## Website
 
+- **Review every change**: changes are marked in red and green. Click any one to turn it down (click again to restore); copying, downloading and “Replace original” then skip it.
+- **Word suggestions**: commonly confused words are underlined in yellow, never changed automatically: misspellings (`再接再励` → `再接再厉`, `既使` → `即使`), 的/地/得 in common patterns (`认真的学习` → `认真地学习`, `跑的很快` → `跑得很快`) and 登陆/登录. Click one to accept it. Turn them off in the rules section.
 - **Rich text**: paste from Word, Google Docs, WeChat articles or any web page and bold, links, headings and lists are kept. “Copy result” puts both the formatted and the plain version on the clipboard.
 - **Share links**: “Share link” puts the text (compressed) into the part of the URL after `#`, which browsers never send to a server. Anyone opening the link sees the same text and settings.
 - Upload or drag in `.md`, `.txt` or `.html` files, download the result, or press Ctrl/⌘+Enter to replace the original.
@@ -85,6 +87,17 @@ check("用AI读唐诗,很好");
 
 `check` returns every problem with its rule, position and replacement; `fix` applies them all and returns the corrected text. Both take the same options: `rules`, `quotes` and `markdown`.
 
+`suggest` lists commonly confused words without changing anything, and the `skip` option leaves chosen changes out:
+
+```ts
+import { fix, suggest } from "paiban";
+
+suggest("他认真的学习,再接再励");
+// → [{ original: "的", replacement: "地", ... }, { original: "再接再励", replacement: "再接再厉", ... }]
+
+fix("你好,世界!", { skip: [{ start: 2, end: 3 }] }); // → "你好,世界！"
+```
+
 In the browser, `paiban/dom` fixes HTML without touching its markup:
 
 ```ts
@@ -111,10 +124,11 @@ npm run build:site   # extension zip + website into site/dist/
 - `src/rules.ts`: the rules. Each one has an id, a title in both languages, an example and a `check` function that returns replacements.
 - `src/protect.ts`: finds code, URLs and other text the rules must skip.
 - `src/index.ts`: `check` and `fix`.
+- `src/suggest.ts`: commonly confused words (suggestions only).
 - `src/dom.ts`: fixes text inside HTML / DOM trees while keeping the markup.
 - `src/cli.ts`: the command-line tool.
 - `extension/`: the browser extension (Manifest V3).
-- `site/`: the website (no framework, built with Vite).
+- `site/`: the website (no framework, built with Vite). `site/i18n.ts` holds its text, which `vite.config.ts` also writes into the HTML at build time so the page reads correctly before JavaScript runs.
 
 Pushes to `main` run the tests and deploy the website to GitHub Pages (enable Pages with the source set to “GitHub Actions” in the repository settings).
 

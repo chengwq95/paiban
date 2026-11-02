@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chengwq95.github.io/paiban/sitemap.xml

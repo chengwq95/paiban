@@ -109,10 +109,13 @@ html[lang="en"] .wordmark { font-family: var(--display-en); font-weight: 800; le
 .pane-out { background: color-mix(in oklab, var(--soft) 35%, var(--card)); }
 .pane-label { display: flex; align-items: center; gap: 10px; padding: 14px 22px 0; color: var(--muted); font-size: 12px; letter-spacing: .08em; }
 .count { margin-left: auto; font-family: var(--mono); letter-spacing: 0; }
+.click-help { color: color-mix(in oklab, var(--muted) 80%, transparent); letter-spacing: 0; }
+@media (max-width: 1100px) { .click-help { display: none; } }
 .legend { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; letter-spacing: 0; }
 .legend i { width: 10px; height: 10px; border-radius: 3px; }
 .lg-del { background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
 .lg-ins { margin-left: 6px; background: var(--good-soft); box-shadow: inset 0 0 0 1px var(--good); }
+.lg-hint { margin-left: 6px; background: color-mix(in oklab, #f2b632 25%, transparent); box-shadow: inset 0 0 0 1px #c98a0c; }
 
 /* Both panes share a 30px line grid; the input is ruled like writing paper. */
 textarea, .output {
@@ -143,11 +146,17 @@ textarea::placeholder { color: color-mix(in oklab, var(--muted) 70%, transparent
 .mode { display: inline-flex; align-items: center; gap: 8px; padding: 2px 4px 2px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 11.5px; letter-spacing: 0; }
 .mode button { padding: 1px 8px; border: 0; border-radius: 999px; background: var(--card); color: var(--fg); font-size: 11px; }
 @media (max-width: 860px) { .rich { height: 300px; } }
-.mark { position: relative; border-radius: 4px; }
+.mark { position: relative; border-radius: 4px; cursor: pointer; }
+.mark:hover del, .mark:hover ins { outline: 1px solid currentColor; outline-offset: 1px; }
+/* A turned-down change: the original stays, the fix is shown struck through and faint. */
+.mark.off del { background: none; color: inherit; text-decoration: none; }
+.mark.off ins { background: none; color: var(--muted); font-weight: 400; text-decoration: line-through; opacity: .6; }
+.mark.off ins.space { box-shadow: inset 0 -2px 0 var(--line); text-decoration: none; }
+.hint { position: relative; cursor: pointer; text-decoration: underline wavy #c98a0c; text-decoration-thickness: 1.5px; text-underline-offset: 4px; background: color-mix(in oklab, #f2b632 18%, transparent); border-radius: 3px; }
 .mark del { padding: 1px 1px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); text-decoration: line-through; text-decoration-thickness: 1.5px; }
 .mark ins { padding: 1px 1px; border-radius: 4px; background: var(--good-soft); color: var(--good); text-decoration: none; font-weight: 600; }
 .mark ins.space { display: inline-block; width: .55em; padding: 0; vertical-align: -2px; height: 1.1em; box-shadow: inset 0 -2px 0 var(--good); }
-.mark:hover::after {
+.mark:hover::after, .hint:hover::after {
   content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 6px); z-index: 5; translate: -50% 0;
   padding: 4px 10px; border-radius: 8px; background: var(--fg); color: var(--page);
   font: 500 12px/1.5 var(--sans); white-space: nowrap; pointer-events: none;
@@ -161,6 +170,10 @@ textarea::placeholder { color: color-mix(in oklab, var(--muted) 70%, transparent
 html[lang="en"] .summary strong { font-family: var(--display-en); font-weight: 800; }
 .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 12px; }
 .chip b { min-width: 20px; padding: 0 6px; border-radius: 999px; background: var(--soft); color: var(--fg); font: 600 11px/18px var(--mono); text-align: center; }
+.chip-off { padding-right: 3px; }
+.chip-off button { height: 20px; padding: 0 8px; border: 0; border-radius: 999px; background: var(--soft); color: var(--fg); font-size: 11.5px; }
+.chip-hint { border-color: color-mix(in oklab, #c98a0c 50%, transparent); color: #a06a00; background: color-mix(in oklab, #f2b632 12%, transparent); padding-right: 10px; }
+@media (prefers-color-scheme: dark) { .chip-hint { color: #e8b84a; } }
 .ok { display: inline-flex; align-items: center; gap: 6px; color: var(--good); font-weight: 600; }
 .foot-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .kbd-hint { margin-right: 4px; color: var(--muted); font-size: 12px; }
@@ -207,6 +220,8 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-bottom-width: 2px;
 .specimen .ws { border-radius: 3px; background: color-mix(in oklab, var(--accent) 22%, transparent); color: inherit; }
 .specimen s { color: var(--muted); text-decoration-color: color-mix(in oklab, var(--accent) 60%, transparent); }
 .specimen span { color: var(--fg); font-weight: 600; }
+.rule-hint[aria-pressed="true"] .toggle { background: #c98a0c; }
+.rule-hint .specimen s { text-decoration: underline wavy #c98a0c; text-underline-offset: 4px; }
 .rule-card code { color: var(--muted); font: 11.5px/1 var(--mono); }
 .quotes-field { margin-top: 20px; }
 

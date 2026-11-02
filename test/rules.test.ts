@@ -18,6 +18,7 @@ const cases: [string, string, string][] = [
   ["full stop: version kept", "版本v1.2发布", "版本 v1.2 发布"],
   ["no space around punct", "你好 ， 世界 。", "你好，世界。"],
   ["parens", "开源(免费)软件", "开源（免费）软件"],
+  ["parens: English sentence kept", "Use the fixer (中文排版) here", "Use the fixer (中文排版) here"],
   ["parens: English kept", "用 Node.js (v20) 运行", "用 Node.js (v20) 运行"],
   ["ellipsis", "然后...", "然后……"],
   ["ellipsis: single", "然后…", "然后……"],
@@ -100,6 +101,18 @@ describe("options", () => {
   });
   it("rules can be turned off", () => {
     expect(fix("使用GitHub", { rules: { "space-between": false } })).toBe("使用GitHub");
+  });
+});
+
+describe("skip", () => {
+  it("leaves a turned-down replacement alone", () => {
+    expect(fix("你好,世界!", { skip: [{ start: 2, end: 3 }] })).toBe("你好,世界！");
+  });
+  it("leaves a turned-down insertion alone", () => {
+    expect(fix("用AI读", { skip: [{ start: 1, end: 1 }] })).toBe("用AI 读");
+  });
+  it("keeps skipping after earlier fixes move the text", () => {
+    expect(fix("我用Mac,效率", { skip: [{ start: 5, end: 6 }] })).toBe("我用 Mac,效率");
   });
 });
 

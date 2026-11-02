@@ -128,7 +128,8 @@ export const RULES: Rule[] = [
     defaultOn: true,
     title: { zh: "括号内有中文时使用全角括号", en: "Full-width parentheses around Chinese text" },
     example: ["李白(诗仙)与杜甫(诗圣)", "李白（诗仙）与杜甫（诗圣）"],
-    check: replaceAll("fullwidth-parens", new RegExp(`[ \\t]*\\(([^()\\n]*[${HAN}][^()\\n]*)\\)[ \\t]*`, "gu"), (m) => `（${m[1].trim()}）`),
+    // Only inside Chinese sentences: "English (中文)" in an English sentence keeps its parentheses.
+    check: replaceAll("fullwidth-parens", new RegExp(`(?<=[${HAN}${FULL_CLOSE}${FULL_OPEN}”》]|^)[ \\t]*\\(([^()\\n]*[${HAN}][^()\\n]*)\\)[ \\t]*`, "gmu"), (m) => `（${m[1].trim()}）`),
   },
   {
     id: "ellipsis",

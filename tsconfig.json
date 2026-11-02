@@ -9,5 +9,5 @@
     "noEmit": true,
     "types": ["node", "chrome"]
   },
-  "include": ["src", "test", "site", "extension/src"]
+  "include": ["src", "test", "site", "extension/src", "vite.config.ts"]
 }

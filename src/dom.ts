@@ -1,4 +1,4 @@
-import { check, nonOverlapping, type Options } from "./index.js";
+import { check, nonOverlapping, shiftSpans, type Issue, type Options } from "./index.js";
 
 // Fixes text inside a DOM tree without touching its markup, so bold, links, headings and lists
 // survive. All text nodes are read as one string (with line breaks between blocks), checked, and
@@ -60,11 +60,13 @@ export function checkElement(root: Node, options: Options = {}) {
 /** Fixes every text node under `root` in place. Returns the number of changes made. */
 export function fixElement(root: Node, options: Options = {}) {
   let changes = 0;
+  let skip = options.skip ?? [];
   for (let pass = 0; pass < 5; pass++) {
     const { text, segments, protect } = collect(root);
-    const issues = nonOverlapping(check(text, { ...options, markdown: false, protect }));
+    const issues = nonOverlapping(check(text, { ...options, markdown: false, protect, skip }));
     if (!issues.length) break;
-    for (const issue of issues.reverse()) {
+    const applied: Issue[] = [];
+    for (const issue of [...issues].reverse()) {
       const overlapping = segments.filter((s) => (issue.start === issue.end
         ? s.start <= issue.start && issue.start <= s.end
         : s.start < issue.end && s.end > issue.start));
@@ -86,8 +88,10 @@ export function fixElement(root: Node, options: Options = {}) {
           s.node!.data = s.node!.data.slice(0, from) + (i === 0 ? issue.replacement : "") + s.node!.data.slice(to);
         });
       }
+      applied.unshift(issue);
       changes++;
     }
+    skip = shiftSpans(skip, applied);
   }
   return changes;
 }

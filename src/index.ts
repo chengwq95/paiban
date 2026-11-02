@@ -2,6 +2,7 @@ import { mask } from "./protect.js";
 import { RULES, RULE_IDS, type Issue, type Lang, type QuoteStyle, type RuleId } from "./rules.js";
 
 export { RULES, RULE_IDS };
+export { suggest, type Suggestion } from "./suggest.js";
 export type { Issue, Lang, QuoteStyle, RuleId };
 
 export interface Options {
@@ -12,7 +13,14 @@ export interface Options {
   /** Skip fenced code blocks and front matter (default true). */
   markdown?: boolean;
   /** Extra ranges to leave alone and treat like inline code (used by the DOM fixer). */
-  protect?: { start: number; end: number }[];
+  protect?: Span[];
+  /** Changes the user turned down: problems with exactly this start and end are not reported. */
+  skip?: Span[];
+}
+
+export interface Span {
+  start: number;
+  end: number;
 }
 
 export interface Problem extends Issue {
@@ -31,7 +39,9 @@ function enabled(options: Options) {
 export function check(text: string, options: Options = {}): Problem[] {
   const masked = mask(text, { markdown: options.markdown ?? true, extra: options.protect });
   const ctx = { masked, quotes: options.quotes ?? "curly" };
-  const issues = enabled(options).flatMap((r) => r.check(ctx));
+  const skip = options.skip ?? [];
+  const issues = enabled(options).flatMap((r) => r.check(ctx))
+    .filter((i) => !skip.some((s) => s.start === i.start && s.end === i.end));
   issues.sort((a, b) => a.start - b.start || a.end - b.end);
 
   const lineStarts = [0];
@@ -56,20 +66,34 @@ export function nonOverlapping<T extends Issue>(issues: T[]): T[] {
   return chosen;
 }
 
+/** Moves spans to where they end up after `applied` (non-overlapping, sorted) edits. */
+export function shiftSpans(spans: Span[], applied: Issue[]): Span[] {
+  const move = (pos: number) => {
+    let delta = 0;
+    for (const a of applied) {
+      if (a.end < pos || (a.end === pos && a.start < a.end)) delta += a.replacement.length - (a.end - a.start);
+    }
+    return pos + delta;
+  };
+  return spans.map((s) => ({ start: move(s.start), end: move(s.end) }));
+}
+
 function apply(text: string, issues: Issue[]) {
   let out = text;
-  for (const issue of nonOverlapping(issues).reverse()) out = out.slice(0, issue.start) + issue.replacement + out.slice(issue.end);
+  for (const issue of [...issues].reverse()) out = out.slice(0, issue.start) + issue.replacement + out.slice(issue.end);
   return out;
 }
 
-/** Returns the text with every fixable problem corrected. */
+/** Returns the text with every fixable problem corrected (except those in `options.skip`). */
 export function fix(text: string, options: Options = {}) {
   let out = text;
+  let skip = options.skip ?? [];
   // Fixes can enable each other (e.g. "中文,English" -> "中文，English"), so repeat until stable.
   for (let pass = 0; pass < 5; pass++) {
-    const issues = check(out, options);
+    const issues = nonOverlapping(check(out, { ...options, skip }));
     if (!issues.length) break;
     out = apply(out, issues);
+    skip = shiftSpans(skip, issues);
   }
   return out;
 }

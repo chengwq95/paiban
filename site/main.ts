@@ -1,112 +1,13 @@
 import { checkElement, fixElement } from "../src/dom";
-import { check, fix, RULES, type Options, type Problem, type RuleId } from "../src/index";
+import { DICT } from "./i18n";
+import { check, fix, RULES, suggest, type Options, type Problem, type RuleId, type Span, type Suggestion } from "../src/index";
 
 type Lang = "zh" | "en";
 
-const DICT = {
-  zh: {
-    brand: "排版",
-    navTool: "在线修正", navRules: "规则", navExt: "浏览器插件", navCss: "网页排版", navDev: "开发者",
-    extTitle: "在任何网页里，选中就能修正",
-    extLead: "公众号后台、知乎、Notion、邮件、各种 CMS 编辑器……选中文字，右键一下就排好，粗体和链接都会保留。",
-    extDemoBefore: "用iphone读唐诗,很方便!", extDemoAfter: "用 iPhone 读唐诗，很方便！",
-    extMenuCopy: "复制", extMenuPaste: "粘贴", extMenuFix: "排版：修正选中的文字",
-    extStep1: "下载并解压", extStep1d: "下载下面的压缩包，解压成一个文件夹。",
-    extStep2: "在浏览器里载入", extStep2d: "打开 chrome://extensions（Edge 是 edge://extensions），开启右上角「开发者模式」，点「加载已解压的扩展程序」，选择刚才的文件夹。",
-    extStep3: "选中文字，右键修正", extStep3d: "或按 Alt+Shift+F。没有选中文字时，会修正整个输入框；按 Ctrl+Z 可以撤销。",
-    extDownload: "下载浏览器插件", extNote: "适用于 Chrome、Edge、Arc、Brave 等 Chromium 浏览器。插件只在你点它的那一刻读取当前网页，不收集任何数据。",
-    eyebrow: "免安装 · 打开网页就能用",
-    heroTitle: "贴上文字，一键排好。",
-    heroLead: "自动补上中英文之间的空格，统一全角标点、引号、省略号和破折号。代码和链接原样保留。",
-    step1: "粘贴文字，格式也能保留", step2: "看清每一处修改", step3: "复制排好的结果",
-    paste: "粘贴", upload: "上传文件", sample: "示例", clear: "清空",
-    viewMarks: "标注修改", viewResult: "修正结果",
-    input: "原文", output: "结果", legendDel: "删除", legendIns: "加入",
-    dropHint: "放开即可读取文件",
-    placeholder: "在这里粘贴文章、Markdown 或任何中文文字……",
-    empty: "修正后的文字会显示在这里。",
-    chars: (n: number) => `${n.toLocaleString()} 字`,
-    download: "下载", apply: "替换原文", copyResult: "复制结果",
-    copied: "已复制到剪贴板", applied: "已替换原文", downloaded: "已下载",
-    pasteDenied: "浏览器不允许读取剪贴板，请直接在左边按 Ctrl+V 粘贴",
-    richMode: "富文本 · 保留格式", toPlain: "改为纯文本",
-    richPasted: "已保留粗体、链接、标题等格式",
-    share: "分享链接", shareCopied: "链接已复制。文字放在链接里，不经过任何服务器",
-    shareTooLong: "文字太长，无法放进链接，请改用下载", shareOpened: "已打开分享的文字", shareBroken: "这个分享链接不完整，无法打开",
-    nothing: "已经排好了，没有需要修改的地方",
-    problems: (n: number) => `${n} 处修改`,
-    privacy: "所有处理都在你的浏览器里完成，文字不会上传到任何地方。",
-    rulesTitle: "十一条规则，照着通行的中文排版习惯",
-    rulesLead: "默认开启十条。点卡片可以开关，修改会马上反映在上面的结果里。",
-    quoteStyle: "引号样式", quoteCurly: "弯引号 “ ”（中国大陆）", quoteCorner: "直角引号 「 」（台湾、香港）",
-    cssTitle: "网页排版 CSS",
-    cssLead: "字体、行高、标点挤压和避头尾，是中文网页最常被忽略的细节。调好后复制即可使用。",
-    script: "文字", scriptSc: "简体中文", scriptTc: "繁体中文",
-    face: "字体", faceSans: "黑体", faceSerif: "宋体",
-    size: "字号", leading: "行高", tracking: "字距",
-    justify: "两端对齐", autospace: "中英文自动间距", trim: "标点挤压",
-    strict: "严格避头尾", emphasis: "着重号代替斜体", indent: "段首缩进两字",
-    copy: "复制",
-    langNote: "记得在 <html> 写上 lang=\"zh-CN\" 或 lang=\"zh-TW\"。浏览器依据它选择字形，写错时简体字可能显示成繁体或日文字形。",
-    devTitle: "也可以放进你的工作流",
-    devLead: "同一套规则提供命令行、JavaScript 函数和 CI 检查，团队文档可以自动保持一致。",
-    devCli: "命令行", cCheck: "# 检查", cFix: "# 直接修正", cRules: "# 查看规则",
-    langSwitch: "EN",
-  },
-  en: {
-    brand: "Paiban",
-    navTool: "Fix text", navRules: "Rules", navExt: "Extension", navCss: "Web CSS", navDev: "Developers",
-    extTitle: "Fix text right where you write it",
-    extLead: "Blog dashboards, Notion, e-mail, any CMS editor… select text, right-click, done. Bold and links are kept.",
-    extDemoBefore: "用iphone读唐诗,很方便!", extDemoAfter: "用 iPhone 读唐诗，很方便！",
-    extMenuCopy: "Copy", extMenuPaste: "Paste", extMenuFix: "Paiban: fix selected text",
-    extStep1: "Download and unzip", extStep1d: "Download the zip below and unzip it into a folder.",
-    extStep2: "Load it in your browser", extStep2d: "Open chrome://extensions (edge://extensions in Edge), turn on Developer mode, click “Load unpacked” and pick the folder.",
-    extStep3: "Select text and right-click", extStep3d: "Or press Alt+Shift+F. With nothing selected it fixes the whole field; Ctrl+Z undoes it.",
-    extDownload: "Download the extension", extNote: "Works in Chrome, Edge, Arc, Brave and other Chromium browsers. It only reads the page at the moment you use it and collects no data.",
-    eyebrow: "Nothing to install · works in your browser",
-    heroTitle: "Paste. Fix. Copy.",
-    heroLead: "Adds the spaces between Chinese and Latin text and fixes full-width punctuation, quotes, ellipses and dashes. Code and links stay untouched.",
-    step1: "Paste text, formatting and all", step2: "Review every change", step3: "Copy the result",
-    paste: "Paste", upload: "Upload", sample: "Sample", clear: "Clear",
-    viewMarks: "Changes", viewResult: "Result",
-    input: "Original", output: "Fixed", legendDel: "removed", legendIns: "added",
-    dropHint: "Drop to open the file",
-    placeholder: "Paste an article, Markdown or any Chinese text here…",
-    empty: "The fixed text will appear here.",
-    chars: (n: number) => `${n.toLocaleString()} chars`,
-    download: "Download", apply: "Replace original", copyResult: "Copy result",
-    copied: "Copied to clipboard", applied: "Original replaced", downloaded: "Downloaded",
-    pasteDenied: "Clipboard access was blocked. Paste with Ctrl+V on the left instead.",
-    richMode: "Rich text · formatting kept", toPlain: "Use plain text",
-    richPasted: "Bold, links, headings and other formatting kept",
-    share: "Share link", shareCopied: "Link copied. The text lives in the link and never touches a server",
-    shareTooLong: "Too long to fit in a link. Download it instead", shareOpened: "Opened the shared text", shareBroken: "This share link is incomplete and can't be opened",
-    nothing: "Already perfect: nothing to change",
-    problems: (n: number) => `${n} change${n === 1 ? "" : "s"}`,
-    privacy: "Everything runs in your browser. Your text is never uploaded.",
-    rulesTitle: "Eleven rules from common Chinese style guides",
-    rulesLead: "Ten are on by default. Click a card to toggle it; the result above updates immediately.",
-    quoteStyle: "Quote style", quoteCurly: "Curly “ ” (mainland China)", quoteCorner: "Corner 「 」 (Taiwan, Hong Kong)",
-    cssTitle: "Web typography CSS",
-    cssLead: "Fonts, line height, punctuation trimming and line breaking are the details Chinese web pages most often miss. Tune them and copy the CSS.",
-    script: "Script", scriptSc: "Simplified", scriptTc: "Traditional",
-    face: "Typeface", faceSans: "Hei (sans)", faceSerif: "Song (serif)",
-    size: "Size", leading: "Line height", tracking: "Tracking",
-    justify: "Justify", autospace: "Auto CJK–Latin spacing", trim: "Punctuation trimming",
-    strict: "Strict line breaking", emphasis: "Emphasis dots, not italics", indent: "Two-character indent",
-    copy: "Copy",
-    langNote: "Set lang=\"zh-CN\" or lang=\"zh-TW\" on <html>. Browsers choose glyphs from it; get it wrong and Simplified text can render with Traditional or Japanese glyph shapes.",
-    devTitle: "Bring it into your workflow",
-    devLead: "The same rules ship as a command-line tool, a JavaScript function and a CI check, so team docs stay consistent.",
-    devCli: "Command line", cCheck: "# check", cFix: "# fix in place", cRules: "# list rules",
-    langSwitch: "中文",
-  },
-};
 
 const SAMPLE = `# 枫桥夜泊:一夜的钟声
 
-张继(字懿孙)约在756年途经苏州,夜泊枫桥,写下了这首只有28个字的诗...
+张继(字懿孙)约在756年途经苏州,夜泊枫桥,静静的听着远处的钟声,写下了这首只有28个字的诗...
 
 > 月落乌啼霜满天,江枫渔火对愁眠.
 > 姑苏城外寒山寺,夜半钟声到客船.
@@ -152,23 +53,40 @@ let view: "marks" | "result" = "marks";
 type Mode = "plain" | "rich";
 let mode: Mode = "plain";
 let fileName = "paiban.md";
-const options = (): Options => ({ rules: ruleState, quotes: $<HTMLSelectElement>("#quotes").value as Options["quotes"] });
+// Changes the user clicked to turn down, as spans of the current text. Cleared whenever the text changes.
+let rejected: Span[] = [];
+let showHints = store.get("paiban-hints") !== "off";
+let hints: Suggestion[] = [];
+const options = (): Options => ({ rules: ruleState, quotes: $<HTMLSelectElement>("#quotes").value as Options["quotes"], skip: rejected });
+const isRejected = (p: Span) => rejected.some((r) => r.start === p.start && r.end === p.end);
 const isOn = (id: RuleId) => ruleState[id] ?? RULES.find((r) => r.id === id)!.defaultOn;
 
 const escapeHtml = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 const ruleTitle = (id: RuleId) => RULES.find((r) => r.id === id)!.title[lang];
 
-function marked(text: string, problems: Problem[]) {
+function marked(text: string, problems: Problem[], suggestions: Suggestion[]) {
+  // Changes and suggestions in text order; anything overlapping an earlier one waits.
+  const items = [
+    ...problems.map((p) => ({ kind: "fix" as const, p, start: p.start, end: p.end })),
+    ...suggestions.map((h, i) => ({ kind: "hint" as const, h, i, start: h.start, end: h.end })),
+  ].sort((a, b) => a.start - b.start || a.end - b.end);
   let html = "";
   let pos = 0;
-  for (const p of problems) {
-    if (p.start < pos) continue;
-    html += escapeHtml(text.slice(pos, p.start));
-    const title = escapeHtml(ruleTitle(p.rule));
-    const del = p.original ? `<del>${escapeHtml(p.original.replace(/ /g, " "))}</del>` : "";
-    const ins = p.replacement === " " ? `<ins class="space"> </ins>` : p.replacement ? `<ins>${escapeHtml(p.replacement)}</ins>` : "";
-    html += `<span class="mark" data-tip="${title}">${del}${ins}</span>`;
-    pos = p.end;
+  for (const item of items) {
+    if (item.start < pos) continue;
+    html += escapeHtml(text.slice(pos, item.start));
+    if (item.kind === "hint") {
+      const tip = escapeHtml(`${item.h.message[lang]} → ${item.h.replacement}（${t().hintClick}）`);
+      html += `<span class="hint" data-hint="${item.i}" data-tip="${tip}">${escapeHtml(item.h.original)}</span>`;
+    } else {
+      const p = item.p;
+      const off = isRejected(p);
+      const tip = escapeHtml(`${ruleTitle(p.rule)}（${off ? t().markRestore : t().markReject}）`);
+      const del = p.original ? `<del>${escapeHtml(p.original.replace(/ /g, "\u00a0"))}</del>` : "";
+      const ins = p.replacement === " " ? `<ins class="space"> </ins>` : p.replacement ? `<ins>${escapeHtml(p.replacement)}</ins>` : "";
+      html += `<span class="mark${off ? " off" : ""}" data-start="${p.start}" data-end="${p.end}" data-tip="${tip}">${del}${ins}</span>`;
+    }
+    pos = item.end;
   }
   return html + escapeHtml(text.slice(pos));
 }
@@ -199,31 +117,61 @@ const fixedText = () => fix(input.value, options());
 
 function render() {
   const blank = isBlank();
+  // Marks show every change, including turned-down ones (greyed out) so they can be turned back on.
+  const all = { ...options(), skip: [] };
   const { text, problems } = mode === "rich"
-    ? checkElement(rich, options())
-    : { text: input.value, problems: check(input.value, options()) };
+    ? checkElement(rich, all)
+    : { text: input.value, problems: check(input.value, all) };
+  hints = showHints && !blank ? suggest(text, { markdown: mode === "plain" }) : [];
+  const active = problems.filter((p) => !isRejected(p));
   const out = $("#output");
   out.classList.toggle("is-empty", blank);
   out.classList.toggle("rich-out", mode === "rich" && view === "result");
   if (blank) out.textContent = t().empty;
-  else if (view === "marks") out.innerHTML = marked(text, problems);
+  else if (view === "marks") out.innerHTML = marked(text, problems, hints);
   else if (mode === "rich") out.innerHTML = fixedHtml();
   else out.textContent = fixedText();
 
   $("#count").textContent = blank ? "" : t().chars(text.length);
   const summary = $("#summary");
   if (blank) summary.innerHTML = "";
-  else if (!problems.length) summary.innerHTML = `<span class="ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>${t().nothing}</span>`;
   else {
     const counts = new Map<RuleId, number>();
-    for (const p of problems) counts.set(p.rule, (counts.get(p.rule) ?? 0) + 1);
-    summary.innerHTML = `<strong>${t().problems(problems.length)}</strong>` +
-      [...counts].sort((a, b) => b[1] - a[1]).map(([id, n]) => `<span class="chip">${escapeHtml(ruleTitle(id))}<b>${n}</b></span>`).join("");
+    for (const p of active) counts.set(p.rule, (counts.get(p.rule) ?? 0) + 1);
+    const parts = [];
+    if (!problems.length) parts.push(`<span class="ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg>${t().nothing}</span>`);
+    else parts.push(`<strong>${t().problems(active.length)}</strong>`);
+    if (rejected.length) parts.push(`<span class="chip chip-off">${t().rejectedCount(rejected.length)}<button type="button" id="restore">${t().restoreAll}</button></span>`);
+    if (hints.length) parts.push(`<span class="chip chip-hint">${t().hintsCount(hints.length)}</span>`);
+    parts.push(...[...counts].sort((a, b) => b[1] - a[1]).map(([id, n]) => `<span class="chip">${escapeHtml(ruleTitle(id))}<b>${n}</b></span>`));
+    summary.innerHTML = parts.join("");
   }
   for (const id of ["#copy", "#download", "#share"]) $<HTMLButtonElement>(id).disabled = blank;
-  $<HTMLButtonElement>("#apply").disabled = blank || !problems.length;
+  $<HTMLButtonElement>("#apply").disabled = blank || !active.length;
   saveDraft();
 }
+
+// Click a change to turn it down (or back on); click a suggestion to accept it.
+$("#output").addEventListener("click", (e) => {
+  const target = e.target as HTMLElement;
+  const mark = target.closest<HTMLElement>(".mark");
+  if (mark) {
+    const span = { start: Number(mark.dataset.start), end: Number(mark.dataset.end) };
+    rejected = isRejected(span) ? rejected.filter((r) => r.start !== span.start || r.end !== span.end) : [...rejected, span];
+    return render();
+  }
+  const hint = target.closest<HTMLElement>(".hint");
+  if (hint) {
+    const h = hints[Number(hint.dataset.hint)];
+    if (mode === "rich") return toast(t().hintRich(h.replacement));
+    input.value = input.value.slice(0, h.start) + h.replacement + input.value.slice(h.end);
+    rejected = [];
+    render();
+  }
+});
+$("#summary").addEventListener("click", (e) => {
+  if ((e.target as HTMLElement).id === "restore") { rejected = []; render(); }
+});
 
 function renderRules() {
   $("#rule-grid").innerHTML = RULES.map((r) => `
@@ -231,7 +179,12 @@ function renderRules() {
       <span class="rule-top"><span class="rule-name">${escapeHtml(r.title[lang])}</span><i class="toggle" aria-hidden="true"></i></span>
       <span class="specimen"><s>${escapeHtml(r.example[0]).replace(/\u3000/g, '<mark class="ws">\u3000</mark>')}</s><span>${escapeHtml(r.example[1])}</span></span>
       <code>${r.id}</code>
-    </button>`).join("");
+    </button>`).join("") + `
+    <button type="button" class="rule-card rule-hint" data-hints aria-pressed="${showHints}">
+      <span class="rule-top"><span class="rule-name">${escapeHtml(t().hintsTitle)}</span><i class="toggle" aria-hidden="true"></i></span>
+      <span class="specimen"><s>${escapeHtml(t().hintsBefore)}</s><span>${escapeHtml(t().hintsAfter)}</span></span>
+      <code>${escapeHtml(t().hintsNote)}</code>
+    </button>`;
 }
 
 // The draft is kept between visits, unless it is just the built-in sample (which may have changed).
@@ -251,6 +204,7 @@ function setMode(next: Mode) {
 
 function load(content: string, as: Mode = "plain", name?: string) {
   setMode(as);
+  rejected = [];
   if (as === "rich") rich.innerHTML = sanitize(content);
   else input.value = content;
   if (name) fileName = name;
@@ -307,8 +261,9 @@ rich.addEventListener("paste", (e) => {
   const text = e.clipboardData?.getData("text/plain") ?? "";
   document.execCommand("insertHTML", false, html ? sanitize(html) : escapeHtml(text).replace(/\n/g, "<br>"));
 });
-input.addEventListener("input", render);
-rich.addEventListener("input", render);
+const edited = () => { rejected = []; render(); };
+input.addEventListener("input", edited);
+rich.addEventListener("input", edited);
 $("#to-plain").addEventListener("click", () => {
   const text = checkElement(rich).text.trim();
   load(text, "plain");
@@ -316,6 +271,13 @@ $("#to-plain").addEventListener("click", () => {
 
 $("#quotes").addEventListener("change", () => { store.set("paiban-quotes", $<HTMLSelectElement>("#quotes").value); render(); });
 $("#rule-grid").addEventListener("click", (e) => {
+  const hintCard = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-hints]");
+  if (hintCard) {
+    showHints = !showHints;
+    hintCard.setAttribute("aria-pressed", String(showHints));
+    store.set("paiban-hints", showHints ? "on" : "off");
+    return render();
+  }
   const card = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-rule]");
   if (!card) return;
   const id = card.dataset.rule as RuleId;
@@ -494,7 +456,7 @@ $("#copy-css").addEventListener("click", async () => {
 // ---------- Language ----------
 function renderLang() {
   document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
-  document.title = lang === "zh" ? "排版 · 中文排版在线修正" : "Paiban · Fix Chinese typography online";
+  document.title = lang === "zh" ? "排版 · 中文排版在线修正工具（中英文空格、全角标点一键修正）" : "Paiban · Fix Chinese typography online";
   document.querySelectorAll<HTMLElement>("[data-t]").forEach((el) => {
     const value = t()[el.dataset.t as keyof typeof DICT.zh];
     if (typeof value === "string") el.textContent = value;
